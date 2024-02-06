@@ -1,0 +1,95 @@
+version: "3.7"
+services:
+    nginx-abz:
+        image: nginx:1.16-alpine
+        container_name: nginx-abz
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./api:/var/www/api
+            - ./client:/var/www/client
+            - ./docker/nginx:/etc/nginx/conf.d/
+        networks:
+            - avz_network
+        depends_on:
+            - api-abz
+            - client-abz
+
+    db-abz:
+        image: mysql:8.0.31
+        container_name: db-abz
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: abz
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: secret
+            MYSQL_USER: user
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./docker/db_data:/var/lib/mysql
+            - ./docker/mysql:/etc/mysql/conf.d
+        networks:
+            - avz_network
+
+    api-abz:
+        build:
+            args:
+                user: ubuntu
+                uid: 1000
+            context: ./docker/php
+            dockerfile: Dockerfile
+        tty: true
+        container_name: api-abz
+        restart: unless-stopped
+        working_dir: /var/www/api
+
+        volumes:
+            - ./api:/var/www/api
+        networks:
+            - avz_network
+        links:
+            - db-abz
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        depends_on:
+            - db-abz
+        ports:
+            - 8783:80
+        environment:
+            - PMA_ARBITRARY=1
+        networks:
+            - avz_network
+    client-abz:
+        image: node:18-alpine
+        container_name: client-abz
+        tty: true
+        volumes:
+            - ./client:/client
+        working_dir: /client
+        tmpfs:
+            - /tmp
+        environment:
+            NODE_ENV: development
+            NUXT_HOST: "0.0.0.0"
+#        command: npm run dev
+        networks:
+            - avz_network
+        links:
+            - api-abz
+        ports:
+            - "3000:3000"
+            - "24678:24678"
+
+volumes:
+    db_data:
+
+networks:
+    avz_network:
+        driver: bridge

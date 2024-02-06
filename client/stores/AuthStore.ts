@@ -71,14 +71,14 @@ export const useAuthStore = defineStore('AuthStore', () => {
         });
 
     }
-  // watch(
-  //   () => errMsg,
-  //   (state: string|null) => {
-  //     setTimeout(()=>setErrMsg(null), 5000);
-  //
-  //   },
-  //   {deep: true}
-  // );
+  watch(
+    () => errMsg,
+    (state: string|null) => {
+      setTimeout(()=>setErrMsg(null), 5000);
+
+    },
+    {deep: true}
+  );
 
     watch(
       () => positions,

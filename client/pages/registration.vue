@@ -11,16 +11,13 @@ const form = ref({
   photo: null
 })
 
-
-
 const onSubmit = () =>{
-  authStore.register(form.value)
-  // if(form.value.position_id == null ) {
-  //   authStore.setErrMsg('The position field is not selected');
-  // } else {
-  //   authStore.setErrMsg(null);
-  //   authStore.register(form.value)
-  // }
+  if(form.value.position_id == null ) {
+    authStore.setErrMsg('The position field is not selected');
+  } else {
+    authStore.setErrMsg(null);
+    authStore.register(form.value)
+  }
 }
 const changeImg = (event) => {
   const fileInput = event.target;
@@ -28,7 +25,7 @@ const changeImg = (event) => {
   form.value.photo = files[0];
 }
 </script>
-
+publicUrlImg
 <template>
   <h1 style="margin-bottom: 25px">Registration</h1>
   <div>{{authStore.okMsg}}</div>

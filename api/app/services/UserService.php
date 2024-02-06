@@ -4,6 +4,7 @@ namespace App\services;
 
 use App\Models\Token;
 use App\Models\User;
+use Artwl\LaravelTinify\Facades\Tinify;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,20 +27,19 @@ class UserService
         $user->phone = $data['phone'];
         $user->password = Hash::make($data['password']);
         $user->position_id = $data['position_id'];
-        $user->save();
+
 
         $image = $data['photo'];
         $name = time() . $image->getClientOriginalName();
-        Tinify\setKey(env('TINI_PNG'));
-        $optimized = Tinify\fromFile($data['photo'])->resize(array(
+        $result = Tinify::fromFile($image);
+
+        $optimized = $result->resize(array(
             "method" => "fit",
             "width" => 70,
             "height" => 70
-        ))->toFile($name);
-        $filePath = Storage::disk('public')->putFileAs('/images/', $optimized, $name);
-        $img = $user->image()->create([
-            'path' => $filePath
-        ]);
+        ))->toFile('storage/images/'.$name);
+        $user->photo = 'images/'.$name;
+        $user->save();
         return $user->id;
     }
 }

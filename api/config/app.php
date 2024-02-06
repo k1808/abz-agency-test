@@ -170,6 +170,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Artwl\LaravelTinify\LaravelTinifyServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -184,6 +185,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Tinify' => Artwl\LaravelTinify\Facades\Tinify::class,
+
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

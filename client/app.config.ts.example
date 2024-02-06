@@ -1,8 +1,4 @@
 export default defineAppConfig({
    publicUrl:  'http://localhost',
-   publicUrlImg: 'http://zalinos.com/storage/',
-   googleMapApiKey: '',
-
-    stripeKey: 'pk_test_51MmZmNDx8ZqFoSmv3gGy4R6VQNa0REuOh6Z8xEHXoOfFCkxSOvYRp70h91TXFOFw4DTWmB69ULCAWXIwaZsFizpC00EjQXQB4x',
-    stripeSecret: 'sk_test_51MmZmNDx8ZqFoSmvKVf98kWX26jiStz1jefMgdqcNQBTD1WnNEXjmElJ30muvUTAIsWdGOfJewl07QHZakhcRLgi00se48OSye',
+   publicUrlImg: 'http://localhost/storage/',
 })
